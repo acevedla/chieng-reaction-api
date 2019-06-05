@@ -4,7 +4,8 @@ const ProductsService = {
     getAllProducts(knex) {
         return knex
         .select('*')
-        .from('products')
+        .from('products, reviews')
+        .where('id' = 'products_id')
     },
 }
 

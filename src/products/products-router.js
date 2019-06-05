@@ -10,6 +10,8 @@ const serializeProducts = products => ({
     id: products.id,
     title: xss(products.title),
     description: xss(products.description),
+    ratings: products.ratings,
+    reviews: xss(products.reviews),
 })
 
 productsRouter
