@@ -2,6 +2,7 @@ const express = require('express')
 const ProductsService = require('./products-service')
 const path = require('path')
 const xss = require('xss')
+const { requireAuth } = require('../middleware/jwt-auth')
 
 const productsRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -51,9 +52,9 @@ productsRouter
         })
         .catch(next)
     })
-    .post(jsonBodyParser, (req, res, next) => {
-        const {reviews_id, ratings, reviews, users_id, products_id } = req.body
-        const newReview = { reviews_id, ratings, reviews, users_id, products_id }
+    .post(requireAuth, jsonBodyParser, (req, res, next) => {
+        const {reviews_id, ratings, reviews, products_id } = req.body
+        const newReview = { reviews_id, ratings, reviews, products_id }
 
         for (const [key, value] of Object.entries(newReview))
             if (value == null)
@@ -61,6 +62,8 @@ productsRouter
                     error: `Missing '${key}' in request body`
                 })
         
+        newReview.users_id = req.user.users_id
+
         ProductsService.insertReview(
             req.app.get('db'),
             newReview
@@ -103,5 +106,6 @@ productsRouter
         })
         .catch(next)
     })
+    
 
 module.exports = productsRouter

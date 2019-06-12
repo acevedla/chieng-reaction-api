@@ -8,9 +8,8 @@ const ProductsService = {
     },
     getAllProductsReviews(knex) {
         return knex
-        .select('*')
         .from('products')
-        .join('reviews', {'products.id': 'reviews.products_id'})
+        .fullOuterJoin('reviews', 'products.id', 'reviews.products_id')
     },
     getProductById (knex, id) {
         return ProductsService.getAllProductsReviews(knex)
@@ -35,6 +34,11 @@ const ProductsService = {
         .then(product => 
             ProductsService.getAllProducts(knex, product.id))
     },
+    deleteProduct(knex, id) {
+        return knex('products')
+          .where({ id })
+          .delete()
+      },
 }
 
 module.exports = ProductsService
