@@ -1,5 +1,7 @@
 # Express Boilerplate!
 
+For Seeding: psql -U dunder-mifflin -d chieng-reaction -f ./projects_folder/chieng-reaction-api/seeds/seed.chiengreaction_table.sql
+
 This is a boilerplate project used for starting new projects!
 
 ## Set up
