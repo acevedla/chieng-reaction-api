@@ -129,7 +129,7 @@ productsRouter
         })
         .catch(next)
     })
-    .delete(equireAuth, (req, res, next) => {
+    .delete(requireAuth, (req, res, next) => {
         NoteService.deleteNote(
             req.app.get('db'),
             id
