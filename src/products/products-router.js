@@ -45,7 +45,7 @@ productsRouter
 
     productsRouter
     .route('/userhomepage')
-    .get((req, res, next) => {
+    .get(requireAuth, (req, res, next) => {
         ProductsService.getAllProductsReviews(req.app.get('db'))
         .then(products => {
             res.json(products.map(serializeProductsReviews))
@@ -78,14 +78,15 @@ productsRouter
 
     productsRouter
     .route('/adminhomepage')
-    .get((req, res, next) => {
+    .get(requireAuth, (req, res, next) => {
+        console.log('hello', req.body)
         ProductsService.getAllProducts(req.app.get('db'))
         .then(products => {
             res.json(products.map(serializeProducts))
         })
         .catch(next)
     })
-    .post(jsonBodyParser, (req, res, next) => {
+    .post(requireAuth, jsonBodyParser, (req, res, next) => {
         const { id, title, description, images } = req.body
         const newProduct = { id, title, description, images }
 
@@ -103,6 +104,38 @@ productsRouter
             res.status(201)
             .location(path.posix.join(req.originalUrl))
             .json(serializeProducts(product))
+        })
+        .catch(next)
+    })
+    .patch(requireAuth, jsonBodyParser, (req, res, next) => {
+        const { id, title, description, images } = req.body
+        const updateProduct = { id, title, description, images }
+
+        for (const [key, value] of Object.entries(updateProduct))
+            if (value == null)
+                return res.status(400).json({
+                    error: `Missing '${key}' in request body`
+                })
+        
+        ProductsService.updateProduct(
+            req.app.get('db'),
+            id,
+            updateProduct
+        )
+        .then(product => {
+            res.status(201)
+            .location(path.posix.join(req.originalUrl))
+            .json(serializeProducts(product))
+        })
+        .catch(next)
+    })
+    .delete(equireAuth, (req, res, next) => {
+        NoteService.deleteNote(
+            req.app.get('db'),
+            id
+        )
+        .then(numRowsAffected => {
+            res.status(204).end()
         })
         .catch(next)
     })

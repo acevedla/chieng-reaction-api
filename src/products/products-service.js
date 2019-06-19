@@ -25,7 +25,7 @@ const ProductsService = {
         .then(review =>
             ProductsService.getProductById(knex, review.reviews_id))
     },
-    insertProduct (knex, newProduct) {
+    insertProduct(knex, newProduct) {
         return knex
         .insert(newProduct)
         .into('products')
@@ -33,6 +33,12 @@ const ProductsService = {
         .then(([product]) => product)
         .then(product => 
             ProductsService.getAllProducts(knex, product.id))
+    },
+    updateProduct(knex, id, updateProduct) {
+        return knex
+        .from('products')
+        .where({ id })
+        .update(updateProduct)
     },
     deleteProduct(knex, id) {
         return knex('products')
