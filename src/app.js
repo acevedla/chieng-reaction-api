@@ -19,6 +19,7 @@ app.use(morgan(morganOption))
 app.use(cors())
 app.use(helmet())
 
+app.use(express.static('public'))
 app.use('/api/products', productsRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)

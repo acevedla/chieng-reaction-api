@@ -1,9 +1,10 @@
 BEGIN;
 
-INSERT INTO products (id, title, description, images)
+INSERT INTO products (title, description, images)
 VALUES
-(1, 'Charizard', 'Pokemon!', '../images/IMG_1935.jpg'),
-(2, 'Snorlax', 'Pokemon!', '../images/IMG_1936.jpg'),
-(3, 'Jigglypuff', 'Pokemon!', '../images/IMG_1937.jpg');
+('Charizard', 'Pokemon!', 'IMG_1935.jpg'),
+('Snorlax', 'Pokemon!', 'IMG_1936.jpg'),
+('Jigglypuff', 'Pokemon!', 'IMG_1938.jpg'),
+('Squirtle', 'Pokemon!', 'IMG_1939.jpg');
 
 COMMIT;
