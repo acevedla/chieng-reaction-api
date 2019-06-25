@@ -79,65 +79,92 @@ productsRouter
     productsRouter
     .route('/adminhomepage')
     .get(requireAuth, (req, res, next) => {
-        console.log('hello', req.body)
-        ProductsService.getAllProducts(req.app.get('db'))
-        .then(products => {
-            res.json(products.map(serializeProducts))
-        })
-        .catch(next)
+        if (req.user.username == 'acevedla5') {
+            ProductsService.getAllProducts(req.app.get('db'))
+            .then(products => {
+                res.json(products.map(serializeProducts))
+            })
+            .catch(next)
+        }
+        else {
+            res.status(404).json({
+                message: "You are not allowed to be here"
+            })
+        }
     })
     .post(requireAuth, jsonBodyParser, (req, res, next) => {
-        const { id, title, description, images } = req.body
-        const newProduct = { id, title, description, images }
+        if (req.user.username == 'acevedla5') {
+            const {title, description, images } = req.body
+            const newProduct = {title, description, images }
 
-        for (const [key, value] of Object.entries(newProduct))
-            if (value == null)
-                return res.status(400).json({
-                    error: `Missing '${key}' in request body`
-                })
-        
-        ProductsService.insertProduct(
-            req.app.get('db'),
-            newProduct
-        )
-        .then(product => {
-            res.status(201)
-            .location(path.posix.join(req.originalUrl))
-            .json(serializeProducts(product))
-        })
-        .catch(next)
+            for (const [key, value] of Object.entries(newProduct))
+                if (value == null)
+                    return res.status(400).json({
+                        error: `Missing '${key}' in request body`
+                    })
+            
+            ProductsService.insertProduct(
+                req.app.get('db'),
+                newProduct
+            )
+            .then(product => {
+                res.status(201)
+                .location(path.posix.join(req.originalUrl))
+                .json(serializeProducts(product))
+            })
+            .catch(next)
+        }
+        else {
+            res.status(404).json({
+                message: "You are not allowed to be here"
+            })
+        }
     })
     .patch(requireAuth, jsonBodyParser, (req, res, next) => {
-        const { id, title, description, images } = req.body
-        const updateProduct = { id, title, description, images }
+        if (req.user.username == 'acevedla5') {
+            const {title, description, images } = req.body
+            const updateProduct = {title, description, images }
 
-        for (const [key, value] of Object.entries(updateProduct))
-            if (value == null)
-                return res.status(400).json({
-                    error: `Missing '${key}' in request body`
-                })
-        
-        ProductsService.updateProduct(
-            req.app.get('db'),
-            id,
-            updateProduct
-        )
-        .then(product => {
-            res.status(201)
-            .location(path.posix.join(req.originalUrl))
-            .json(serializeProducts(product))
-        })
-        .catch(next)
+            for (const [key, value] of Object.entries(updateProduct))
+                if (value == null)
+                    return res.status(400).json({
+                        error: `Missing '${key}' in request body`
+                    })
+            
+            ProductsService.updateProduct(
+                req.app.get('db'),
+                id,
+                updateProduct
+            )
+            .then(product => {
+                res.status(201)
+                .location(path.posix.join(req.originalUrl))
+                .json(serializeProducts(product))
+            })
+            .catch(next)
+        }
+        else {
+            res.status(404).json({
+                message: "You are not allowed to be here"
+            })
+        }
     })
     .delete(requireAuth, (req, res, next) => {
-        NoteService.deleteNote(
-            req.app.get('db'),
-            id
-        )
-        .then(numRowsAffected => {
-            res.status(204).end()
-        })
-        .catch(next)
+        if (req.user.username == 'acevedla5') {
+            ProductsService.deleteProduct(
+                req.app.get('db'),
+                id
+            )
+            .then(numRowsAffected => {
+                res.status(204).end()
+            })
+            .catch(next)
+        }
+        else {
+            res.status(404).json({
+                message: "You are not allowed to be here"
+            })
+        }
     })
     
 
