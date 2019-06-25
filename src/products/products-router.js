@@ -45,7 +45,7 @@ productsRouter
 
     productsRouter
     .route('/userhomepage')
-    .get(requireAuth, (req, res, next) => {
+    .get((req, res, next) => {
         ProductsService.getAllProductsReviews(req.app.get('db'))
         .then(products => {
             res.json(products.map(serializeProductsReviews))
@@ -129,7 +129,7 @@ productsRouter
         })
         .catch(next)
     })
-    .delete(equireAuth, (req, res, next) => {
+    .delete(requireAuth, (req, res, next) => {
         NoteService.deleteNote(
             req.app.get('db'),
             id
