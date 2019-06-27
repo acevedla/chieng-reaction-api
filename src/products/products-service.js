@@ -9,7 +9,7 @@ const ProductsService = {
     getAllProductsReviews(knex) {
         return knex
         .from('products')
-        .fullOuterJoin('reviews', 'products.id', 'reviews.products_id')
+        .leftJoin('reviews', 'products.id', 'reviews.products_id')
     },
     getProductById (knex, id) {
         return ProductsService.getAllProductsReviews(knex)
@@ -32,7 +32,7 @@ const ProductsService = {
         .returning('*')
         .then(([product]) => product)
         .then(product => 
-            ProductsService.getAllProducts(knex, product.id))
+            ProductsService.getProductById(knex, product.id))
     },
     updateProduct(knex, id, updateProduct) {
         return knex
