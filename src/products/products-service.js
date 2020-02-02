@@ -45,6 +45,17 @@ const ProductsService = {
           .where({ id })
           .delete()
       },
+      serializeProductsReviews(productsReviews) {
+        return {
+            id: productsReviews.id,
+            title: xss(productsReviews.title),
+            description: xss(productsReviews.description),
+            images: productsReviews.images, 
+            ratings: productsReviews.ratings,
+            reviews: xss(productsReviews.reviews),
+        }
+    },
+
 }
 
 module.exports = ProductsService

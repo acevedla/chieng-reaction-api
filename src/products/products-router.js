@@ -15,11 +15,8 @@ const serializeProducts = products => ({
 }) 
 
 const serializeReviews = reviews => ({
-    reviews_id: reviews.reviews_id,
     ratings: reviews.ratings,
     reviews: xss(reviews.reviews),
-    users_id: reviews.users_id,
-    products_id: reviews.products_id,
 })
 
 const serializeProductsReviews = productsReviews => ({
@@ -45,7 +42,7 @@ productsRouter
 
     productsRouter
     .route('/userhomepage')
-    .get((req, res, next) => {
+    .get(requireAuth, (req, res, next) => {
         ProductsService.getAllProductsReviews(req.app.get('db'))
         .then(products => {
             res.json(products.map(serializeProductsReviews))
@@ -53,8 +50,8 @@ productsRouter
         .catch(next)
     })
     .post(requireAuth, jsonBodyParser, (req, res, next) => {
-        const {reviews_id, ratings, reviews, products_id } = req.body
-        const newReview = { reviews_id, ratings, reviews, products_id }
+        const { ratings, reviews } = req.body
+        const newReview = { ratings, reviews }
 
         for (const [key, value] of Object.entries(newReview))
             if (value == null)
