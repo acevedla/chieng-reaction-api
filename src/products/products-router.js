@@ -42,7 +42,7 @@ productsRouter
 
     productsRouter
     .route('/userhomepage')
-    .get(requireAuth, (req, res, next) => {
+    .get(requireAuth, jsonBodyParser, (req, res, next) => {
         ProductsService.getAllProductsReviews(req.app.get('db'))
         .then(products => {
             res.json(products.map(serializeProductsReviews))
@@ -50,8 +50,14 @@ productsRouter
         .catch(next)
     })
     .post(requireAuth, jsonBodyParser, (req, res, next) => {
+<<<<<<< HEAD
         const { ratings, reviews } = req.body
         const newReview = { ratings, reviews }
+=======
+        console.log(req.body)
+        const { products_id, ratings, reviews } = req.body
+        const newReview = { products_id, ratings, reviews }
+>>>>>>> c6fca49d5736a67391fd89042257359783eb4bdc
 
         for (const [key, value] of Object.entries(newReview))
             if (value == null)
@@ -91,8 +97,8 @@ productsRouter
     })
     .post(requireAuth, jsonBodyParser, (req, res, next) => {
         if (req.user.username == 'acevedla5') {
-            const {title, description, images } = req.body
-            const newProduct = {title, description, images }
+            const { title, description, images } = req.body
+            const newProduct = { title, description, images }
 
             for (const [key, value] of Object.entries(newProduct))
                 if (value == null)
@@ -118,9 +124,10 @@ productsRouter
         }
     })
     .patch(requireAuth, jsonBodyParser, (req, res, next) => {
+        console.log(req.body)
         if (req.user.username == 'acevedla5') {
-            const {title, description, images } = req.body
-            const updateProduct = {title, description, images }
+            const { id, title, description, images } = req.body
+            const updateProduct = { id, title, description, images }
 
             for (const [key, value] of Object.entries(updateProduct))
                 if (value == null)
@@ -146,11 +153,12 @@ productsRouter
             })
         }
     })
-    .delete(requireAuth, (req, res, next) => {
+    .delete(requireAuth, jsonBodyParser, (req, res, next) => {
+        console.log(req.body)
         if (req.user.username == 'acevedla5') {
             ProductsService.deleteProduct(
                 req.app.get('db'),
-                id
+                req.body.id
             )
             .then(numRowsAffected => {
                 res.status(204).end()
